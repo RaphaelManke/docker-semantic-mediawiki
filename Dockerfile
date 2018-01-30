@@ -1,5 +1,5 @@
 ARG tag
-FROM mediawiki:${tag:-latest}
+FROM mediawiki:${tag:-1.30}
 MAINTAINER Raphael Manke, Patrick Eisele
 
 RUN apt-get update && apt-get install -y \
