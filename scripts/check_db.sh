@@ -72,7 +72,7 @@ function install_smw {
     #
     add_to_file 'require_once "$IP/extensions/SemanticMediaWiki/SemanticMediaWiki.php";' "$localSettings" "SMW - step 1"
     # TODO add correct hostname
-    add_to_file "enableSemantics( 'example.org' );" "$localSettings" "SMW - step 2"
+    add_to_file "enableSemantics( '$SMW_HOSTNAME' );" "$localSettings" "SMW - step 2"
 
     echo "finished to install SMW"
 
