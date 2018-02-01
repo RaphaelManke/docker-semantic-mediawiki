@@ -26,7 +26,7 @@ function add_to_file {
 
 }
 function update_mw {
-    php "maintenance/update.php"
+    php "maintenance/update.php" --skip-external-dependencies
     php composer.phar update --no-dev
 }
 function main {
