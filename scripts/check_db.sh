@@ -26,8 +26,11 @@ function add_to_file {
 
 }
 function update_mw {
+    echo "running update scripts"
+    php composer.phar update
     php "maintenance/update.php" --skip-external-dependencies
-    php composer.phar update --no-dev
+
+
 }
 function main {
     echo "$@"
