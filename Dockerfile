@@ -19,8 +19,8 @@ COPY scripts ./scripts/check_db.sh ./
 # Run the composer installation
 RUN sh "install_composer.sh"
 
-# Install semantiv mediawiki
-#RUN php composer.phar require mediawiki/semantic-media-wiki "~2.5" --update-no-dev
+# Install semantic mediawiki
+RUN php composer.phar require mediawiki/semantic-media-wiki "~2.5" --update-no-dev
 
 # At containerstart run check script and then http server
 CMD /var/www/html/check_db.sh && apache2-foreground
