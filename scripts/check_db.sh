@@ -11,6 +11,7 @@ function add_to_file {
     if grep -Rq "$searchTerm" "$file"
     then
         echo "$searchName already in $file file. Nothing to do."
+
         # code if found
     else
         if [ -e "$file" ]
@@ -26,9 +27,12 @@ function add_to_file {
 
 }
 function update_mw {
+
     echo "running update scripts"
-    php composer.phar update
+    php composer.phar update --no-dev
+    echo "composer ended with $?"
     php "maintenance/update.php" --skip-external-dependencies
+    echo "update ended with $?"
 
 
 }
@@ -120,14 +124,16 @@ localSettings="LocalSettings.php"
 
 # try ping the database. without connection initialization fails.
 ping_db
+
+# run update script to make sure everything is up-to-date
+#update_mw
 # run main
 main
 # check if SM is activated, if not activate it
-install_smw
+#install_smw
 
 #  install or update referenced extensions
 install_extensions
-
 # run update script to make sure everything is up-to-date
 update_mw
 

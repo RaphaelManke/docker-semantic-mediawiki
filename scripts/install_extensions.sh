@@ -43,6 +43,8 @@ function main {
     file=$1
     type=$2
     path=$3
+    workDir=$(pwd)
+    echo "Working on path $workDir"
     echo "TYPE = $type"
     # check which type for extracting right values.
     if [ "$type" == "extensions" ]
@@ -59,6 +61,7 @@ function main {
     ITER=0
     for i in "${NAMES[@]}"
     do
+        cd "$workDir"
         localName="$i"
         localUrl="${URLS[$ITER]}"
         localDefault="${SKIN_DEFAULT[$ITER]}"
@@ -77,8 +80,9 @@ function main {
             then
                 echo "successfully updated $localName"
             else
-                echo "Error pulling $localName"
+                echo "Error pulling $localName. Maybe the extension is a default extension."
             fi
+            cd ..
         # extension not found, cloning it.
         else
             git clone "$localUrl" "$extPath"
