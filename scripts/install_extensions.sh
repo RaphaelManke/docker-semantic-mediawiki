@@ -89,6 +89,32 @@ function main {
             if [ $? -eq 0 ]
             then
                 echo "successfully cloned $localName"
+                # see https://www.mediawiki.org/wiki/Manual:Extensions
+                if version_gt "$MEDIAWIKI_MAJOR_VERSION" "1.24"
+
+                then
+                    # check if old or new version of loading-syntax should be used.
+                    if [ "$type" == "extensions" ] && [ -f "$extPath/extension.json" ]
+                    # use new syntax
+                    then
+                        searchTerm="wfLoadExtension( '$localName' );"
+
+                    elif [ "$type" == "skins" ] && [ -f "$extPath/skin.json" ]
+                    # use new syntax
+                    then
+                        searchTerm="wfLoadSkin( '$localName' );"
+
+                    else
+                    # fallback use old syntax
+                        searchTerm="require_once \"\$IP/$type/$localName/$localName.php\";"
+                    fi
+
+                else
+                    # old version of mediawiki, therefore use old syntax
+                    searchTerm="require_once \"\$IP/$type/$localName/$localName.php\";"
+                fi
+                # check if extension is in localSettings file.
+                add_to_file "$searchTerm" "$localSettings" "$localName"
             else
                 echo "Error cloning $localName"
             fi
@@ -97,32 +123,7 @@ function main {
         # go back to working directory
         cd "$workDir"
 
-        # see https://www.mediawiki.org/wiki/Manual:Extensions
-        if version_gt "$MEDIAWIKI_MAJOR_VERSION" "1.24"
 
-        then
-            # check if old or new version of loading-syntax should be used.
-            if [ "$type" == "extensions" ] && [ -f "$extPath/extension.json" ]
-            # use new syntax
-            then
-                searchTerm="wfLoadExtension( '$localName' );"
-
-            elif [ "$type" == "skins" ] && [ -f "$extPath/skin.json" ]
-            # use new syntax
-            then
-                searchTerm="wfLoadSkin( '$localName' );"
-
-            else
-            # fallback use old syntax
-                searchTerm="require_once \"\$IP/$type/$localName/$localName.php\";"
-            fi
-
-        else
-            # old version of mediawiki, therefore use old syntax
-            searchTerm="require_once \"\$IP/$type/$localName/$localName.php\";"
-        fi
-        # check if extension is in localSettings file.
-        add_to_file "$searchTerm" "$localSettings" "$localName"
 
         # set skin as default skin
         if [ "$type" == "skins" ] && [ "$localDefault" -eq "1" ]
